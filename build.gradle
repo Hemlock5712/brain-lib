@@ -1,0 +1,66 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+allprojects {
+
+    group 'org.team5712'
+    version '2023.0.0'
+    repositories {
+        mavenCentral()
+
+        maven { url = uri('https://frcmaven.wpi.edu/artifactory/release/') }
+
+        // CTRE
+        maven { url = uri('https://devsite.ctr-electronics.com/maven/release/') }
+
+        // REV
+        maven { url = uri('https://maven.revrobotics.com/') }
+
+        // Jitpack
+        maven { url = uri("https://jitpack.io") }
+
+        // Pathplanner
+        maven { url = uri("https://3015rangerrobotics.github.io/pathplannerlib/repo")}
+
+        // PhotonVision
+        maven { url = uri("https://maven.photonvision.org/repository/internal")}
+        maven { url = uri("https://maven.photonvision.org/repository/snapshots")}
+    }
+}
+
+dependencies {
+    implementation 'edu.wpi.first.wpilibj:wpilibj-java:2023.1.1-beta-4'
+    implementation 'edu.wpi.first.ntcore:ntcore-java:2023.1.1-beta-4'
+    implementation 'edu.wpi.first.wpiutil:wpiutil-java:2023.1.1-beta-4'
+    implementation 'edu.wpi.first.wpimath:wpimath-java:2023.1.1-beta-4'
+    implementation 'edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:2023.1.1-beta-4'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+
+    implementation 'com.ctre.phoenix:api-java:5.30.1-beta-4'
+    implementation 'com.ctre.phoenix:wpiapi-java:5.30.1-beta-4'
+
+    implementation 'com.revrobotics.frc:REVLib-java:2023.0.0'
+
+    implementation 'com.github.democat3457:swerve-lib:1.2.1'
+
+    implementation 'com.pathplanner.lib:PathplannerLib-java:2023.1.0'
+
+    implementation 'org.photonvision:PhotonLib-java:v2023.1.1-beta-6'
+    implementation 'org.photonvision:PhotonTargeting-java:v2023.1.1-beta-6'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact jar
+        }
+    }
+}
