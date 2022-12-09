@@ -6,7 +6,7 @@ plugins {
 allprojects {
 
     group 'com.github.Hemlock5712'
-    version '2023.0.4'
+    version '2023.0.5'
     repositories {
         mavenCentral()
 
