@@ -2,10 +2,8 @@ package org.team5712.lib.motor;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PowerDistribution;
 
-public class GrayFalcon500 extends TalonFX {
+public class GrayFalcon500 extends TalonFX implements IGrayMotorController<GrayFalcon500> {
     private final double saturationVoltage = 12;
     private final int ticksPerRev = 2048;
 
@@ -17,18 +15,28 @@ public class GrayFalcon500 extends TalonFX {
         super(deviceNumber);
     }
 
+    @Override
     public double getRevolutions() {
         return this.getSelectedSensorPosition() / ticksPerRev;
     }
 
+    @Override
     public double getVelocityRPM() {
         return (this.getSelectedSensorVelocity() / 2048.0) * 600;
     }
-    public void setVelocityRPM(int rpm) {
+
+    @Override
+    public void setVelocityRPM(double rpm) {
         this.set(ControlMode.Velocity, (rpm * 2048.0) / 600);
     }
+
+    @Override
     public void setVoltage(double voltage) {
         this.set(ControlMode.PercentOutput, voltage / saturationVoltage);
     }
 
+    @Override
+    public void follow(GrayFalcon500 masterMotor) {
+        super.follow(masterMotor);
+    }
 }

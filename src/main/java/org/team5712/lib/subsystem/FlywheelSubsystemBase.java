@@ -3,10 +3,11 @@ package org.team5712.lib.subsystem;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.system.plant.DCMotor;
 import org.team5712.lib.motor.GrayFalcon500;
+import org.team5712.lib.motor.IGrayMotorController;
 import org.team5712.lib.subsystem.base.FlywheelSubsystem;
 
-public class FalconFlywheelSubsystem extends FlywheelSubsystem {
-    protected final GrayFalcon500 primaryMotor;
+public class FlywheelSubsystemBase extends FlywheelSubsystem {
+    protected final IGrayMotorController primaryMotor;
     protected double flywheelGearRatio;
 
     /**
@@ -17,7 +18,7 @@ public class FalconFlywheelSubsystem extends FlywheelSubsystem {
      * @param flywheelGearing Gear ratio of the flywheel. Should be greater than 1 if the flywheel is slower than the motors
      * @param motors All the falcons that are powering the flywheel. They will be automatically set to follow the first motor passed in
      */
-    public FalconFlywheelSubsystem(double momentOfInertia, double flywheelGearing, GrayFalcon500... motors) {
+    public FlywheelSubsystemBase(double momentOfInertia, double flywheelGearing, IGrayMotorController... motors) {
         super(DCMotor.getFalcon500(motors.length), momentOfInertia, flywheelGearing);
         primaryMotor = motors[0];
         flywheelGearRatio = flywheelGearing;
@@ -61,10 +62,13 @@ public class FalconFlywheelSubsystem extends FlywheelSubsystem {
         setTargetRPM(0);
     }
 
+    /**
+     * Computes the voltage to make the flywheel spin at the target RPM
+     */
     @Override
     public void periodic() {
         // Correct the Kalman filter's state vector estimate with encoder data
-        loop.correct(VecBuilder.fill(primaryMotor.getSelectedSensorVelocity()));
+        loop.correct(VecBuilder.fill(primaryMotor.getVelocityRPM()));
 
         // Make a prediction on what the new voltage should be
         loop.predict(0.020);
