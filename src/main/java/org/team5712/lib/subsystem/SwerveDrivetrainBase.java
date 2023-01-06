@@ -23,25 +23,44 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public abstract class SwerveDrivetrainBase extends SubsystemBase {
-    protected int PIGEON_ID;
+    private int PIGEON_ID;
     protected boolean ADD_TO_DASHBOARD = false;
 
-    protected SwerveConstants FRONT_LEFT_CONSTANTS;
-    protected SwerveConstants FRONT_RIGHT_CONSTANTS;
-    protected SwerveConstants BACK_LEFT_CONSTANTS;
-    protected SwerveConstants BACK_RIGHT_CONSTANTS;
+    private SwerveConstants FRONT_LEFT_CONSTANTS;
+    private SwerveConstants FRONT_RIGHT_CONSTANTS;
+    private SwerveConstants BACK_LEFT_CONSTANTS;
+    private SwerveConstants BACK_RIGHT_CONSTANTS;
 
     protected PIDController TRANSLATION_PID_CONTROLLER = new PIDController(4, 0, 0);
     protected PIDController ROTATION_PID_CONTROLLER = new PIDController(4, 0, 0);
 
-    protected double MAX_VELOCITY_METERS_PER_SECOND;
+    private double MAX_VELOCITY_METERS_PER_SECOND;
 
-    private final WPI_Pigeon2 pigeon = new WPI_Pigeon2(PIGEON_ID);
+    private final WPI_Pigeon2 pigeon;
     protected ChassisSpeeds desiredChassisSpeeds;
 
     protected final SwerveModule[] swerveModules;
 
-    protected SwerveDrivetrainBase() {
+    protected SwerveDrivetrainBase(
+            SwerveConstants frontLeftConstants,
+            SwerveConstants frontRightConstants,
+            SwerveConstants backLeftConstants,
+            SwerveConstants backRightConstants,
+            double maxVelocity,
+            int pigeonId,
+            ChassisSpeeds chassisSpeeds
+            ) {
+
+        FRONT_LEFT_CONSTANTS = frontLeftConstants;
+        FRONT_RIGHT_CONSTANTS = frontRightConstants;
+        BACK_LEFT_CONSTANTS = backLeftConstants;
+        BACK_RIGHT_CONSTANTS = backRightConstants;
+        MAX_VELOCITY_METERS_PER_SECOND = maxVelocity;
+        PIGEON_ID = pigeonId;
+        desiredChassisSpeeds = chassisSpeeds;
+
+        pigeon = new WPI_Pigeon2(PIGEON_ID);
+
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
         ShuffleboardLayout frontLeftLayout = null;
         ShuffleboardLayout frontRightLayout = null;
@@ -91,7 +110,7 @@ public abstract class SwerveDrivetrainBase extends SubsystemBase {
         }));
     }
 
-    abstract SwerveDriveKinematics getKinematics();
+    protected abstract SwerveDriveKinematics getKinematics();
 
     private static SwerveModule createSwerveModule(ShuffleboardLayout container,
                                                    ModuleConfiguration moduleConfiguration,
