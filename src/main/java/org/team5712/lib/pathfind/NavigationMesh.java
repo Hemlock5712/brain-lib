@@ -1,7 +1,7 @@
 package org.team5712.lib.pathfind;
 
-import java.util.*;
 import java.awt.geom.Line2D;
+import java.util.*;
 
 public class NavigationMesh {
 
@@ -29,6 +29,7 @@ public class NavigationMesh {
 
     // Add an edge to the navigation mesh
     public void addEdge(Edge edge, List<Obstacle> obstacles) {
+        double buffer = 0.9652 / 2;
         // Why not use the Line2D class' static method of .linesIntersect() ? I am just hold on
         for (Obstacle obstacle : obstacles) {
             PolygonFloat polygon = obstacle.polygon;
@@ -39,7 +40,8 @@ public class NavigationMesh {
                 double y1 = polygon.ypoints[i];
                 double x2 = polygon.xpoints[j];
                 double y2 = polygon.ypoints[j];
-                if (Line2D.linesIntersect(x1, y1, x2, y2, edge.start.x, edge.start.y, edge.end.x, edge.end.y)) {
+                if (Line2D.linesIntersect(x1 + buffer, y1 + buffer, x2 + buffer, y2 + buffer, edge.start.x, edge.start.y, edge.end.x, edge.end.y) ||
+                        Line2D.linesIntersect(x1 - buffer, y1 - buffer, x2 - buffer, y2 - buffer, edge.start.x, edge.start.y, edge.end.x, edge.end.y)) {
                     return;
                 }
             }

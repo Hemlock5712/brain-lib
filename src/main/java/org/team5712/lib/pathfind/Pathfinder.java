@@ -4,23 +4,29 @@ import java.util.*;
 
 public class Pathfinder {
     List<Obstacle> obstacles = new ArrayList<>();
+    List<Obstacle> obstaclesWithOffsets = new ArrayList<>();
     NavigationMesh navMesh = new NavigationMesh();
+    float obstacleOffsetDistance;
 
-    public Pathfinder(int xNodes, int yNodes) {
-        for(int i = 0; i < xNodes; i++) {
-            for (int j = 0; j < yNodes; j++) {
-                navMesh.addNode(new Node(i, j));
-            }
-        }
+    public Pathfinder(float obstacleOffsetDistance) {
+        this.obstacleOffsetDistance = obstacleOffsetDistance;
     }
 
-    public Pathfinder(int xNodes, int yNodes, List<Obstacle> obstacles) {
-        this(xNodes, yNodes);
+    public Pathfinder(float obstacleOffsetDistance, List<Obstacle> obstacles) {
+        this(obstacleOffsetDistance);
         this.obstacles = obstacles;
+        obstaclesWithOffsets = obstacles.stream().map(o -> o.offset(obstacleOffsetDistance)).toList();
+        obstaclesWithOffsets.forEach(this::addObstacleNodes);
     }
 
     public void addObstacle(Obstacle obstacle) {
         this.obstacles.add(obstacle);
+        this.obstaclesWithOffsets.add(obstacle.offset(obstacleOffsetDistance));
+        addObstacleNodes(obstacle);
+    }
+
+    public void addObstacleNodes(Obstacle obstacle) {
+        obstacle.addNodes(navMesh);
     }
 
     /**

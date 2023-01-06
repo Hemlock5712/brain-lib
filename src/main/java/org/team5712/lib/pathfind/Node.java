@@ -1,6 +1,7 @@
 package org.team5712.lib.pathfind;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Node {
     double x, y, holonomicRotation;

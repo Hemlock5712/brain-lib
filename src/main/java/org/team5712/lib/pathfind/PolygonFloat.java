@@ -32,6 +32,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
+
 /**
  * This class is a Polygon with float coordinates.
  *
@@ -497,6 +498,13 @@ limitations under the License.
 
 */
 
+
+/**
+ * This class has the same behavior than {@link Polygon2D}, except that
+ * the figure is not closed.
+ *
+ * @version $Id: Polyline2D.java 594018 2007-11-12 04:17:41Z cam $
+ */
 class Polyline2D implements Shape, Cloneable, Serializable {
 
     private static final float ASSUME_ZERO = 0.001f;
@@ -859,10 +867,13 @@ class Polyline2D implements Shape, Cloneable, Serializable {
         for (int i = 0; i < npoints - 1; i++) {
             pol.addPoint(xpoints[i], ypoints[i]);
         }
-        Point2D.Double p0 = new Point2D.Double(xpoints[0], ypoints[0]);
-        Point2D.Double p1 = new Point2D.Double(xpoints[npoints - 1], ypoints[npoints - 1]);
+        Point2D.Double p0 =
+                new Point2D.Double(xpoints[0], ypoints[0]);
+        Point2D.Double p1 =
+                new Point2D.Double(xpoints[npoints - 1], ypoints[npoints - 1]);
 
-        if (p0.distance(p1) > ASSUME_ZERO) pol.addPoint(xpoints[npoints - 1], ypoints[npoints - 1]);
+        if (p0.distance(p1) > ASSUME_ZERO)
+            pol.addPoint(xpoints[npoints - 1], ypoints[npoints - 1]);
 
         return pol;
     }
