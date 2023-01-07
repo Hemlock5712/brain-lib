@@ -28,8 +28,7 @@ public class NavigationMesh {
     }
 
     // Add an edge to the navigation mesh
-    public void addEdge(Edge edge, List<Obstacle> obstacles) {
-        double buffer = 0.9652 / 2;
+    public boolean addEdge(Edge edge, List<Obstacle> obstacles) {
         // Why not use the Line2D class' static method of .linesIntersect() ? I am just hold on
         for (Obstacle obstacle : obstacles) {
             PolygonFloat polygon = obstacle.polygon;
@@ -40,15 +39,15 @@ public class NavigationMesh {
                 double y1 = polygon.ypoints[i];
                 double x2 = polygon.xpoints[j];
                 double y2 = polygon.ypoints[j];
-                if (Line2D.linesIntersect(x1 + buffer, y1 + buffer, x2 + buffer, y2 + buffer, edge.start.x, edge.start.y, edge.end.x, edge.end.y) ||
-                        Line2D.linesIntersect(x1 - buffer, y1 - buffer, x2 - buffer, y2 - buffer, edge.start.x, edge.start.y, edge.end.x, edge.end.y)) {
-                    return;
+                if (Line2D.linesIntersect(x1, y1, x2, y2, edge.start.x, edge.start.y, edge.end.x, edge.end.y)) {
+                    return false;
                 }
             }
         }
         this.edges.add(edge);
         edge.start.addNeighbor(edge.end);
         edge.end.addNeighbor(edge.start);
+        return true;
     }
 
 
@@ -94,7 +93,7 @@ public class NavigationMesh {
     private static double distance(Node n1, Node n2) {
         double dx = n1.x - n2.x;
         double dy = n1.y - n2.y;
-        return Math.sqrt((dx * dx) + (dy * dy));
+        return Math.hypot(dx, dy);
     }
 
     // Get the node in the open set with the lowest f score

@@ -31,7 +31,7 @@ public class Pathfinder {
 
     /**
      * Finds a path between the start point and end point.
-     * End point should have a node created for it earlier on, probably
+     * End point should have a node created and edges added for it earlier on, probably
      * at robot startup, since we'll know all the points we have presets for
      *
      * @param startPoint Current robot position

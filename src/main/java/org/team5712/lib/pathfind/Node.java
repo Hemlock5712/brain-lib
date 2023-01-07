@@ -3,18 +3,21 @@ package org.team5712.lib.pathfind;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+
 public class Node {
-    double x, y, holonomicRotation;
+    double x, y;
+    Rotation2d holonomicRotation;
     List<Node> neighbors;
 
     public Node(double x, double y) {
         this.x = x;
         this.y = y;
-        holonomicRotation = -1;
+        holonomicRotation = Rotation2d.fromDegrees(0);
         this.neighbors = new ArrayList<>();
     }
 
-    public Node(double x, double y, double holonomicRotation) {
+    public Node(double x, double y, Rotation2d holonomicRotation) {
         this.x = x;
         this.y = y;
         this.holonomicRotation = holonomicRotation;
