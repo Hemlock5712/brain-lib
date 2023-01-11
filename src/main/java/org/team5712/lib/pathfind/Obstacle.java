@@ -1,19 +1,17 @@
 package org.team5712.lib.pathfind;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import org.team5712.lib.util.Floats;
+import org.team5712.lib.util.Doubles;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Obstacle {
-    PolygonFloat polygon;
+    PolygonDouble polygon;
 
-    public Obstacle(float[] xPoints, float[] yPoints, int nPoints) {
-        this.polygon = new PolygonFloat(xPoints, yPoints, nPoints);
+    public Obstacle(double[] xPoints, double[] yPoints) {
+        this.polygon = new PolygonDouble(xPoints, yPoints);
     }
 
     public void addNodes(NavigationMesh nodes) {
@@ -34,7 +32,7 @@ public class Obstacle {
      * @param distance Distance to expand the shape outwards by.
      * @return New obstacle, which has the distance passed in added to all sides.
      */
-    public Obstacle offset(float distance) {
+    public Obstacle offset(double distance) {
         // Get a list of all edges with the offsets added onto them
         List<ObstacleEdge> offsetEdges = new ArrayList<>();
         for(int i = 0; i < polygon.npoints; i++) {
@@ -47,8 +45,8 @@ public class Obstacle {
                 ).offset(distance)
             );
         }
-        List<Float> xPoints = new ArrayList<>();
-        List<Float> yPoints = new ArrayList<>();
+        List<Double> xPoints = new ArrayList<>();
+        List<Double> yPoints = new ArrayList<>();
 
         // Loop through all edges, checking if there's an intersection between any of them.
         // If an intersection does occur, cut the point off at that intersection,
@@ -64,11 +62,11 @@ public class Obstacle {
                     // If lines don't intersect, and the edge hasn't been plotted out already
                     if(!edge.hasBeenCleaned()) {
                         // If edge was cleaned from a previous loop, don't add the first point
-                        xPoints.add((float) offsetEdges.get(i).point1.getX());
-                        yPoints.add((float) offsetEdges.get(i).point1.getY());
+                        xPoints.add(offsetEdges.get(i).point1.getX());
+                        yPoints.add(offsetEdges.get(i).point1.getY());
                     }
-                    xPoints.add((float)offsetEdges.get(i).point2.getX());
-                    yPoints.add((float)offsetEdges.get(i).point2.getY());
+                    xPoints.add(offsetEdges.get(i).point2.getX());
+                    yPoints.add(offsetEdges.get(i).point2.getY());
                     edge.setHasBeenPlotted(true);
                 }
                 else {
@@ -77,18 +75,18 @@ public class Obstacle {
                         // Don't duplicate points
                         if (!edge.hasBeenCleaned()) {
                             // If edge was cleaned from a previous loop, don't add the first point
-                            xPoints.add((float) offsetEdges.get(i).point1.getX());
-                            yPoints.add((float) offsetEdges.get(i).point1.getY());
+                            xPoints.add(offsetEdges.get(i).point1.getX());
+                            yPoints.add(offsetEdges.get(i).point1.getY());
                         }
-                        xPoints.add((float) intersectionPoint.getX());
-                        yPoints.add((float) intersectionPoint.getY());
+                        xPoints.add(intersectionPoint.getX());
+                        yPoints.add(intersectionPoint.getY());
                         otherEdge.setHasBeenCleaned(true);
                         edge.setHasBeenPlotted(true);
                     }
                 }
             }
         }
-        return new Obstacle(Floats.toArray(xPoints), Floats.toArray(yPoints), xPoints.size());
+        return new Obstacle(Doubles.toArray(xPoints), Doubles.toArray(yPoints));
     }
 
     public String toString() {
@@ -106,9 +104,9 @@ public class Obstacle {
         private boolean hasBeenCleaned = false;
         private boolean hasBeenPlotted = false;
 
-        public ObstacleEdge(float x1, float y1, float x2, float y2) {
-            point1 = new Translation2d(x1, y1);
-            point2 = new Translation2d(x2, y2);
+        public ObstacleEdge(double xpoints, double ypoints, double xpoints2, double ypoints2) {
+            point1 = new Translation2d(xpoints, ypoints);
+            point2 = new Translation2d(xpoints2, ypoints2);
         }
 
         public ObstacleEdge(Translation2d point1, Translation2d point2) {
@@ -116,7 +114,7 @@ public class Obstacle {
             this.point2 = point2;
         }
 
-        public ObstacleEdge offset(float distance) {
+        public ObstacleEdge offset(double distance) {
             // Calculate angle of edge
             Rotation2d angle = point2.minus(point1).getAngle();
             // Calculate perpendicular angle
